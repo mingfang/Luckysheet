@@ -10705,10 +10705,14 @@ const functionImplementation = {
 
         try {
             //lookup_value
-            var lookup_value = func_methods.getFirstValue(arguments[0]);
+            let lookup_value = func_methods.getFirstValue(arguments[0]);
             if(valueIsError(lookup_value)){
                 return lookup_value;
             }
+            // match is case-insensitive
+            lookup_value = lookup_value.toLowerCase()
+            // for match type 0
+            const isWildcard = lookup_value.match("[\?\*]") != null
 
             //lookup_array
             var data_lookup_array = arguments[1];
@@ -10738,13 +10742,13 @@ const functionImplementation = {
                         for(var i = 0; i < data_lookup_array.data.length; i++){
                             for(var j = 0; j < data_lookup_array.data[i].length; j++){
                                 if(data_lookup_array.data[i][j] != null && !isRealNull(data_lookup_array.data[i][j].v)){
-                                    lookup_array.push(data_lookup_array.data[i][j].v);
+                                    lookup_array.push(data_lookup_array.data[i][j].v.toLowerCase());
                                 }
                             }
                         }
                     }
                     else{
-                        lookup_array.push(data_lookup_array.data.v);
+                        lookup_array.push(data_lookup_array.data.v.toLowerCase());
                     }
                 }
             }
@@ -10789,9 +10793,8 @@ const functionImplementation = {
                     }
                 }
                 else if (match_type === 0) {
-                    if (typeof lookup_value === 'string') {
-                        lookup_value = lookup_value.replace(/\?/g, '.');
-                        if (lookup_array[idx].toLowerCase().match(lookup_value.toLowerCase())) {
+                    if (isWildcard) {
+                        if (lookup_array[idx].match(lookup_value)) {
                             return idx + 1;
                         }
                     }
