@@ -215,9 +215,9 @@ const server = {
 					})
 				}
 	            if(type == 1){ //send 成功或失败
-                const oldIndex = data.data.v.index;
+                const oldIndex = data?.data?.v?.index;
                 const sheetToUpdate = Store.luckysheetfile.filter((sheet)=> sheet.index === oldIndex)[0];
-                if (sheetToUpdate !== null) {
+                if (sheetToUpdate) {
                   setTimeout(() => {
                     const index = data.data.i;
                     sheetToUpdate.index = index;
